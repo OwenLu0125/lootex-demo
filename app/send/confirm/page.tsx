@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { useAccount, useBalance } from 'wagmi';
 import { Box, Skeleton } from '@mui/material';
-
+import FeeData from '../../../components/FeeData';
 
 export default function Confirm() {
   const [transactionAddress, setTransactionAddress] = useState<string | undefined>(undefined);
@@ -53,9 +53,7 @@ export default function Confirm() {
           </section>
 
           <section className="mb-4 p-4 bg-white shadow-md rounded-md">
-            <h2 className="text-lg font-bold">Estimated fee</h2>
-            <p className="text-sm text-gray-500">Morket -30 sec</p>
-            <p className="text-sm text-gray-500">Max fee: 0.00101457 SepoliaETH</p>
+            <FeeData />
           </section>
         </main>
 
