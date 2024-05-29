@@ -34,9 +34,11 @@ export default function Home() {
             <Typography className="bg-slate-500 rounded-lg">{userAddress.slice(0, 4) + '...' + userAddress.slice(-4)}</Typography>
             <div className="flex justify-between mt-4">
               <div className="flex flex-col gap-1">
-                <button className="bg-gray-400 hover:bg-gray-500 text-white font-bold p-5 rounded-full ">
-                  <ArrowUpwardIcon />
-                </button>
+                <Link href="./send">
+                  <button className="bg-gray-400 hover:bg-gray-500 text-white font-bold p-5 rounded-full ">
+                    <ArrowUpwardIcon />
+                  </button>
+                </Link>
                 <Typography>send</Typography>
               </div>
               <div className="flex flex-col gap-1">

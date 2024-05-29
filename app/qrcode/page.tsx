@@ -36,7 +36,7 @@ const Qrcode = () => {
           />
         </div>
         {/* Account Balance */}
-        <h2 className="mt-4 text-gray-600">My Account Balance</h2>
+        <h2 className="mt-4 text-gray-600">My Account :</h2>
         <p className="text-2xl font-bold">{address.slice(0, 4) + '...' + address.slice(-4)}</p>
 
         {/* Transfer Button */}
