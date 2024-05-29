@@ -1,6 +1,10 @@
 'use client';
 import { usePrivy } from '@privy-io/react-auth';
 import { useEffect, useState } from 'react';
+import { Button, Typography } from '@mui/material';
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
+import AutorenewIcon from '@mui/icons-material/Autorenew';
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 
 export default function Home() {
   const { ready, authenticated, user, login, logout } = usePrivy();
@@ -21,39 +25,48 @@ export default function Home() {
   }
 
   return (
-    <>
-      <div className="text-center">
-        <header className="bg-neutral-200 min-h-screen flex flex-col items-center justify-center text-2xl">
-          {ready && authenticated ? (
-            <div className=' h-screen w-screen bg-slate-200 flex flex-col justify-center items-center'>
-              {/* <textarea
-                readOnly
-                value={JSON.stringify(user, null, 2)}
-                className="w-96 h-64 rounded-md"ㄋ
-              />
-              <br /> */}
-              <div> Total balance:</div>
-              <div>$123.45 USD</div>
-              <div className='bg-slate-500'>{userAddress.slice(0, 4) + '...' + userAddress.slice(-4)}</div>
-              <div className='flex justify-evenly gap-5'>
-                <div>send</div>
-                <div>withdraw</div>
-                <div>convert</div>
+    <div className="text-center">
+      <div className="bg-neutral-200 min-h-screen flex flex-col items-center justify-center">
+        {ready && authenticated ? (
+          <div className="flex flex-col gap-4">
+            <Typography variant="h5">Total balance:</Typography>
+            <Typography variant="h2">$123.45 USD</Typography>
+            <Typography className="bg-slate-500 rounded-lg">{userAddress.slice(0, 4) + '...' + userAddress.slice(-4)}</Typography>
+            <div className="flex justify-between mt-4">
+              <div className="flex flex-col gap-1">
+                <button className="bg-gray-400 hover:bg-gray-500 text-white font-bold p-5 rounded-full ">
+                  <ArrowUpwardIcon />
+                </button>
+                <Typography>send</Typography>
               </div>
-              <div className='flex flex-col justify-start'>
-                <div>Balance</div>
-                <div>eth</div>
-                <div>weth</div>
+              <div className="flex flex-col gap-1">
+                <button className="bg-gray-400 hover:bg-gray-500 text-white font-bold p-5 rounded-full">
+                  <ArrowDownwardIcon />
+                </button>
+                <Typography>withdraw</Typography>
               </div>
-              <button onClick={logout} className="mt-5 px-5 py-3 bg-indigo-500 text-white rounded-md">
-                Log Out
-              </button>
+              <div className="flex flex-col gap-1">
+                <button className="bg-gray-400 hover:bg-gray-500 text-white font-bold p-5 rounded-full">
+                  <AutorenewIcon />
+                </button>
+                <Typography>convert</Typography>
+              </div>
             </div>
-          ) : (
-            <button onClick={login} className="px-5 py-3 bg-indigo-500 text-white rounded-md">Log In</button>
-          )}
-        </header>
+            <div>
+              <div>
+                <Typography>Balance</Typography>
+                <Typography>eth</Typography>
+                <Typography>weth</Typography>
+              </div>
+            </div>
+            <Button onClick={logout} className="mt-5" variant="contained" color="primary">
+              Log Out
+            </Button>
+          </div>
+        ) : (
+          <Button onClick={login} variant="contained" color="primary">Log In</Button>
+        )}
       </div>
-    </>
+    </div>
   );
 }
