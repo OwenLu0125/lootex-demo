@@ -1,11 +1,11 @@
 'use client';
+import Link from 'next/link';
 import { usePrivy } from '@privy-io/react-auth';
 import { useEffect, useState } from 'react';
 import { Button, Typography } from '@mui/material';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import AutorenewIcon from '@mui/icons-material/Autorenew';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
-
 export default function Home() {
   const { ready, authenticated, user, login, logout } = usePrivy();
 
@@ -40,9 +40,12 @@ export default function Home() {
                 <Typography>send</Typography>
               </div>
               <div className="flex flex-col gap-1">
-                <button className="bg-gray-400 hover:bg-gray-500 text-white font-bold p-5 rounded-full">
-                  <ArrowDownwardIcon />
-                </button>
+                <Link href="./qrcode">
+                  <button className="bg-gray-400 hover:bg-gray-500 text-white font-bold p-5 rounded-full"
+                  >
+                    <ArrowDownwardIcon />
+                  </button>
+                </Link>
                 <Typography>withdraw</Typography>
               </div>
               <div className="flex flex-col gap-1">
