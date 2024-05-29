@@ -52,11 +52,27 @@ export default function Home() {
                 <Typography>convert</Typography>
               </div>
             </div>
-            <div>
-              <div>
-                <Typography>Balance</Typography>
-                <Typography>eth</Typography>
-                <Typography>weth</Typography>
+            <div className="bg-white shadow rounded-lg p-4">
+              <Typography variant="h6">Balances</Typography>
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center">
+                  <div className="h-6 w-6 rounded-full mr-2 bg-blue-500 flex items-center justify-center text-white">
+                    <span>⭐</span>
+                  </div>
+                  <span className="font-semibold text-sm">ETH</span>
+                </div>
+                <div>
+                  <p className="text-sm font-semibold">0.13</p>
+                  <p className="text-xs text-gray-500">1 ETH = 1800 USD</p>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between">
+                <div className="flex items-center">
+                  <div className="h-6 w-6 rounded-full mr-2 bg-gray-300">🥴</div>
+                  <span className="font-semibold text-sm">WETH</span>
+                </div>
+                <p className="text-sm font-semibold">0</p>
               </div>
             </div>
             <Button onClick={logout} className="mt-5" variant="contained" color="primary">
