@@ -1,18 +1,22 @@
 'use client';
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
-import { usePathname, useSearchParams } from 'next/navigation'
+import { useSearchParams } from 'next/navigation'
+import { useAccount, useBalance } from 'wagmi';
+
 
 export default function Confirm() {
-  const [transactionAddress, setTransactionAddress] = useState<string | null>(null);
-  const pathname = usePathname()
+  const [transactionAddress, setTransactionAddress] = useState<string | undefined>(undefined);
   const searchParams = useSearchParams()
+  const { address } = useAccount();
+  const { data } = useBalance({ address });
 
   useEffect(() => {
     const url = `${searchParams}`
     const transactionAddress = url.split('=')[1]
     setTransactionAddress(transactionAddress)
-  }, [pathname, searchParams])
+  }, [searchParams])
+
   return (
     <div className="flex flex-col h-screen p-5">
       <header className="p-4">
@@ -29,7 +33,9 @@ export default function Confirm() {
       <main className="flex-1 p-4 overflow-auto">
         <section className="mb-4 p-4 bg-white shadow-md rounded-md">
           <h2 className="text-lg font-bold">資產:</h2>
-          <p className="text-sm text-gray-500">餘額 :: 4.50504666 SepoliaETH</p>
+          {data && (
+            <p className="text-sm text-gray-500">餘額 :{data?.formatted} {data?.symbol}</p>
+          )}
         </section>
 
         <section className="mb-4 p-4 bg-white shadow-md rounded-md">
