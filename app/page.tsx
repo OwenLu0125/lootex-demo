@@ -6,33 +6,60 @@ import { Button, Typography } from '@mui/material';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import AutorenewIcon from '@mui/icons-material/Autorenew';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import { ethers } from "ethers";
+import { useBalance } from 'wagmi';
 
 export default function Home() {
   const { ready, authenticated, login, logout } = usePrivy();
   const { wallets } = useWallets();
-  const embeddedWallet = wallets.find((wallet) => wallet.walletClientType === 'privy');
 
-  const [userAddress, setUserAddress] = useState<string>('');
+  const [userEmbeddedWallet, setEmbeddedWallet] = useState<string>("");
+  const [userWalletBalance, setUserWalletBalance] = useState<string>("");
+  const [ethNumericValue, setEthNumericValue] = useState<number>(0);
+  const [ethValue, setEthValue] = useState<number>(0);
+
+  const { data } = useBalance({ address: userEmbeddedWallet as `0x${string}` });
 
   useEffect(() => {
-    if (embeddedWallet) {
-      setUserAddress(embeddedWallet.address); // Fix: Pass the address property of the embeddedWallet object
+    if (!ready) {
+      return;
+    } else {
+      setUp();
     }
-  }, [embeddedWallet]);
-
-  // Wait until the Privy client is ready before taking any actions
-  if (!ready) {
-    return null;
-  }
+    async function setUp() {
+      const embeddedWallet = wallets.find(
+        (wallet) => wallet.walletClientType === "privy"
+      );
+      if (embeddedWallet) {
+        const provider = await embeddedWallet.getEthereumProvider();
+        await provider.request({
+          method: "wallet_switchEthereumChain",
+          params: [{ chainId: `0x${Number(11155111).toString(16)}` }],
+        });
+        const ethProvider = new ethers.providers.Web3Provider(provider);
+        const walletBalance = await ethProvider.getBalance(
+          embeddedWallet.address
+        );
+        const ethStringAmount = ethers.utils.formatEther(walletBalance);
+        setEmbeddedWallet(embeddedWallet.address);
+        setUserWalletBalance(ethStringAmount);
+      }
+      const response = await fetch('https://dex-v3-api-aws.lootex.dev/api/v3/currency/all-pairs');
+      const data = await response.json();
+      setEthNumericValue(parseFloat(data.ETH))
+      const walletNumericBalance = parseFloat(userWalletBalance);
+      setEthValue(ethNumericValue * walletNumericBalance);
+    }
+  }, [userEmbeddedWallet, wallets, ethValue, ready, userWalletBalance, ethNumericValue]);
 
   return (
     <div className="text-center">
-      <div className="bg-neutral-200 min-h-screen flex flex-col items-center justify-center">
+      <div className="bg-neutral-200 min-h-screen  flex flex-col items-center justify-center">
         {ready && authenticated ? (
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-4 ">
             <Typography variant="h5">Total balance:</Typography>
-            <Typography variant="h2">$123.45 USD</Typography>
-            <Typography className="bg-slate-500 rounded-lg">{userAddress.slice(0, 4) + '...' + userAddress.slice(-4)}</Typography>
+            <Typography variant="h2">{ethValue.toFixed(3)} USD</Typography>
+            <Typography className="bg-slate-500 rounded-lg">{userEmbeddedWallet.slice(0, 4) + '...' + userEmbeddedWallet.slice(-4)}</Typography>
             <div className="flex justify-between mt-4">
               <div className="flex flex-col gap-1">
                 <Link href="./send">
@@ -67,8 +94,8 @@ export default function Home() {
                   <span className="font-semibold text-sm">ETH</span>
                 </div>
                 <div>
-                  <p className="text-sm font-semibold">0.13</p>
-                  <p className="text-xs text-gray-500">1 ETH = 1800 USD</p>
+                  <p className="text-sm font-semibold">{userWalletBalance.slice(0, 8)} {data?.symbol}</p>
+                  <p className="text-xs text-gray-500">1 ETH = {ethNumericValue} USD </p>
                 </div>
               </div>
 
