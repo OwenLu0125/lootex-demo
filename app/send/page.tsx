@@ -1,10 +1,13 @@
 'use client';
 import Link from 'next/link'
 import React from 'react'
+import { useWallets } from '@privy-io/react-auth';
 
 const Send = () => {
   const [amount, setAmount] = React.useState<number>(0);
   const [transactionAddress, setTransactionAddress] = React.useState('');
+  const { wallets } = useWallets();
+  const embeddedWallet = wallets.find((wallet) => wallet.walletClientType === 'privy');
 
   return (
     <div className=" flex flex-col items-center justify-center min-h-screen bg-white">
@@ -16,7 +19,14 @@ const Send = () => {
         </button>
       </Link>
       <div className="flex flex-col flex-grow p-4 mt-8">
-        <h2 className="mb-4 text-lg">How much do you want to send?</h2>
+        <h2 className="mb-4 text-lg">Send</h2>
+        <div>from</div>
+        <div className='mb-4'>{embeddedWallet?.address}</div>
+        <div>to</div>
+        <input className="border p-2 mb-4 rounded-lg" type="text" placeholder="Enter name or link"
+          value={transactionAddress}
+          onChange={(e) => setTransactionAddress(e.target.value)}
+        />
         <div>send</div>
         <div className="flex space-x-2 mb-4">
           <input className="flex-grow border p-2 rounded-lg" type="number" step="0.01" placeholder="Enter amount" value={amount}
@@ -26,14 +36,10 @@ const Send = () => {
             {/* Other currency options */}
           </select>
         </div>
-        <div>to</div>
-        <input className="border p-2 mb-4 rounded-lg" type="text" placeholder="Enter name or link"
-          value={transactionAddress}
-          onChange={(e) => setTransactionAddress(e.target.value)}
-        />
         <Link href={{ pathname: 'send/confirm', query: { transactionAddress, amount } }}>
           <div className='flex justify-center items-center'>
-            <button className="mt-60 px-2 py-2 w-full rounded-lg bg-blue-500 text-white">
+            <button className="mt-60 px-2 py-2 w-full rounded-lg bg-blue-500 text-white"
+            >
               Continue
             </button>
           </div>

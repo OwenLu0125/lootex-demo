@@ -6,6 +6,7 @@ import { Button, Typography } from '@mui/material';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import AutorenewIcon from '@mui/icons-material/Autorenew';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+
 export default function Home() {
   const { ready, authenticated, user, login, logout } = usePrivy();
 

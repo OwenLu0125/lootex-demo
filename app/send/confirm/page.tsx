@@ -4,34 +4,27 @@ import { Suspense } from 'react';
 import React, { useEffect, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { useBalance } from 'wagmi';
-import { usePrivy } from '@privy-io/react-auth';
+import { useWallets } from '@privy-io/react-auth';
 import { Box, Skeleton } from '@mui/material';
 import FeeData from '../../../components/FeeData';
 
 export default function Confirm() {
   const [transactionAddress, setTransactionAddress] = useState<string | undefined>(undefined);
   const [amount, setAmount] = useState<number>(0);
-  const [userAddress, setUserAddress] = useState<string>('');
   const searchParams = useSearchParams()
+  const { wallets } = useWallets();
+  // // const provider = await wallet.getEthereumProvider();
 
-  const { ready, authenticated, user } = usePrivy();
-
-  const { data } = useBalance({ address: userAddress as `0x${string}` });
+  const embeddedWallet = wallets.find((wallet) => wallet.walletClientType === 'privy');
+  const { data } = useBalance({ address: embeddedWallet as unknown as `0x${string}` });
 
   useEffect(() => {
     const transactionAddress = searchParams.get('transactionAddress');
     const amount = searchParams.get('amount');
     setTransactionAddress(transactionAddress ?? undefined)
     setAmount(Number(amount ?? 0))
-  }, [searchParams])
+  }, [searchParams, wallets])
 
-  useEffect(() => {
-    if (ready && authenticated) {
-      console.log('User is authenticated', user?.wallet?.address);
-    }
-    setUserAddress(user?.wallet?.address || '');
-
-  }, [ready, authenticated, user]);
 
   return (
     <Suspense fallback={<div>
@@ -72,9 +65,8 @@ export default function Confirm() {
           </section>
         </main>
 
-        <footer className="p-4 bg-white shadow-md">
-          <button className="w-full py-2 px-4 bg-blue-600 text-white rounded-md">Confirm & Send</button>
-        </footer>
+        <button className="w-full py-2 px-4 bg-blue-600 text-white rounded-md"
+        >Confirm & Send</button>
       </div>
     </Suspense>
   )
