@@ -2,7 +2,7 @@
 import Link from 'next/link';
 import { usePrivy, useWallets } from '@privy-io/react-auth';
 import { useEffect, useState } from 'react';
-import { Button, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import AutorenewIcon from '@mui/icons-material/Autorenew';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
