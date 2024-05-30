@@ -49,17 +49,15 @@
 
 html,
 body {
-  max-width: 100vw;
-  overflow-x: hidden;
+  width: 100%;
+  height: 100%;
+  background-color: #191319;
+  color: #a49fa4;
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(to bottom, transparent, rgb(var(--background-end-rgb)))
-    rgb(var(--background-start-rgb));
-}
-
-a {
-  color: inherit;
-  text-decoration: none;
+button {
+  background-color: #2f51ac;
+  &:hover {
+    background-color: #1e40af;
+  }
 }
