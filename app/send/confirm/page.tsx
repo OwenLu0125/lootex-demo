@@ -3,21 +3,35 @@ import Link from 'next/link'
 import { Suspense } from 'react';
 import React, { useEffect, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
-import { useAccount, useBalance } from 'wagmi';
+import { useBalance } from 'wagmi';
+import { usePrivy } from '@privy-io/react-auth';
 import { Box, Skeleton } from '@mui/material';
 import FeeData from '../../../components/FeeData';
 
 export default function Confirm() {
   const [transactionAddress, setTransactionAddress] = useState<string | undefined>(undefined);
+  const [amount, setAmount] = useState<number>(0);
+  const [userAddress, setUserAddress] = useState<string>('');
   const searchParams = useSearchParams()
-  const { address } = useAccount();
-  const { data } = useBalance({ address });
+
+  const { ready, authenticated, user } = usePrivy();
+
+  const { data } = useBalance({ address: userAddress as `0x${string}` });
 
   useEffect(() => {
-    const url = `${searchParams}`
-    const transactionAddress = url.split('=')[1]
-    setTransactionAddress(transactionAddress)
+    const transactionAddress = searchParams.get('transactionAddress');
+    const amount = searchParams.get('amount');
+    setTransactionAddress(transactionAddress ?? undefined)
+    setAmount(Number(amount ?? 0))
   }, [searchParams])
+
+  useEffect(() => {
+    if (ready && authenticated) {
+      console.log('User is authenticated', user?.wallet?.address);
+    }
+    setUserAddress(user?.wallet?.address || '');
+
+  }, [ready, authenticated, user]);
 
   return (
     <Suspense fallback={<div>
@@ -41,9 +55,10 @@ export default function Confirm() {
 
         <main className="flex-1 p-4 overflow-auto">
           <section className="mb-4 p-4 bg-white shadow-md rounded-md">
-            <h2 className="text-lg font-bold">資產:</h2>
+            <h2 className="text-lg font-bold">you want to send</h2>
+            <h1> {amount} {data?.symbol}</h1>
             {data && (
-              <p className="text-sm text-gray-500">餘額 :{data?.formatted} {data?.symbol}</p>
+              <div className="text-sm text-gray-500">餘額 :{data?.formatted} {data?.symbol}</div>
             )}
           </section>
 
@@ -58,7 +73,7 @@ export default function Confirm() {
         </main>
 
         <footer className="p-4 bg-white shadow-md">
-          <button className="w-full py-2 px-4 bg-blue-600 text-white rounded-md">下一頁</button>
+          <button className="w-full py-2 px-4 bg-blue-600 text-white rounded-md">Confirm & Send</button>
         </footer>
       </div>
     </Suspense>

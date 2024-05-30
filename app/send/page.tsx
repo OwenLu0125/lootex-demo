@@ -19,22 +19,24 @@ const Send = () => {
         <h2 className="mb-4 text-lg">How much do you want to send?</h2>
         <div>send</div>
         <div className="flex space-x-2 mb-4">
-          <input className="flex-grow border p-2" type="text" placeholder="Enter amount" value={amount}
+          <input className="flex-grow border p-2 rounded-lg" type="number" step="0.01" placeholder="Enter amount" value={amount}
             onChange={(e) => setAmount(Number(e.target.value))} />
-          <select className="border ">
+          <select className="border rounded-lg">
             <option>ETH</option>
             {/* Other currency options */}
           </select>
         </div>
         <div>to</div>
-        <input className="border p-2 mb-4" type="text" placeholder="Enter name or link"
+        <input className="border p-2 mb-4 rounded-lg" type="text" placeholder="Enter name or link"
           value={transactionAddress}
           onChange={(e) => setTransactionAddress(e.target.value)}
         />
-        <Link href={{ pathname: 'send/confirm', query: { transactionAddress } }}>
-          <button className="mt-60 px-8 py-2 rounded-full bg-blue-500 text-white">
-            Continue
-          </button>
+        <Link href={{ pathname: 'send/confirm', query: { transactionAddress, amount } }}>
+          <div className='flex justify-center items-center'>
+            <button className="mt-60 px-2 py-2 w-full rounded-lg bg-blue-500 text-white">
+              Continue
+            </button>
+          </div>
         </Link>
       </div>
     </div>
