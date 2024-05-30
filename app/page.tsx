@@ -1,6 +1,6 @@
 'use client';
 import Link from 'next/link';
-import { usePrivy } from '@privy-io/react-auth';
+import { usePrivy, useWallets } from '@privy-io/react-auth';
 import { useEffect, useState } from 'react';
 import { Button, Typography } from '@mui/material';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
@@ -8,17 +8,17 @@ import AutorenewIcon from '@mui/icons-material/Autorenew';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 
 export default function Home() {
-  const { ready, authenticated, user, login, logout } = usePrivy();
+  const { ready, authenticated, login, logout } = usePrivy();
+  const { wallets } = useWallets();
+  const embeddedWallet = wallets.find((wallet) => wallet.walletClientType === 'privy');
 
   const [userAddress, setUserAddress] = useState<string>('');
 
   useEffect(() => {
-    if (ready && authenticated) {
-      console.log('User is authenticated', user?.wallet?.address);
+    if (embeddedWallet) {
+      setUserAddress(embeddedWallet.address); // Fix: Pass the address property of the embeddedWallet object
     }
-    setUserAddress(user?.wallet?.address || '');
-
-  }, [ready, authenticated, user]);
+  }, [embeddedWallet]);
 
   // Wait until the Privy client is ready before taking any actions
   if (!ready) {
@@ -36,7 +36,7 @@ export default function Home() {
             <div className="flex justify-between mt-4">
               <div className="flex flex-col gap-1">
                 <Link href="./send">
-                  <button className="bg-gray-400 hover:bg-gray-500 text-white font-bold p-5 rounded-full ">
+                  <button className="bg-sky-800 hover:bg-sky-900 text-white font-bold p-5 rounded-full ">
                     <ArrowUpwardIcon />
                   </button>
                 </Link>
@@ -44,15 +44,14 @@ export default function Home() {
               </div>
               <div className="flex flex-col gap-1">
                 <Link href="./qrcode">
-                  <button className="bg-gray-400 hover:bg-gray-500 text-white font-bold p-5 rounded-full"
-                  >
+                  <button className="bg-sky-800 hover:bg-sky-900 text-white font-bold p-5 rounded-full ">
                     <ArrowDownwardIcon />
                   </button>
                 </Link>
                 <Typography>withdraw</Typography>
               </div>
               <div className="flex flex-col gap-1">
-                <button className="bg-gray-400 hover:bg-gray-500 text-white font-bold p-5 rounded-full">
+                <button className="bg-sky-800 hover:bg-sky-900 text-white font-bold p-5 rounded-full ">
                   <AutorenewIcon />
                 </button>
                 <Typography>convert</Typography>
@@ -87,6 +86,7 @@ export default function Home() {
           </div>
         ) : (
           <Button onClick={login} variant="contained" color="primary">Log In</Button>
+
         )}
       </div>
     </div>

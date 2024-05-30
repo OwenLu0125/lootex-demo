@@ -1,35 +1,42 @@
-'use client';
+import { ethers } from "ethers";
+import React from "react";
 
-import Button from 'components/Button';
-import Wrapper from 'components/Wrapper';
-import {parseEther} from 'viem';
-import type {Config} from 'wagmi';
-import {useSendTransaction} from 'wagmi';
-import type {SendTransactionVariables} from 'wagmi/query';
+type Props = {
+  sendTransaction: any;
+  transactionAddress: string;
+  etherAmount: string;
+};
 
-const SendTransaction = () => {
-  const transactionRequest: SendTransactionVariables<Config, number> = {
-    to: '0xF2A919977c6dE88dd8ed90feAADFcC5d65D66038' as `0x${string}`,
-    value: parseEther('0.001'),
-    type: 'eip1559',
+function SendTransaction({ sendTransaction, etherAmount, transactionAddress }: Props) {
+
+  const sendTx = async () => {
+    const weiValue = ethers.utils.parseEther(etherAmount);
+    const hexWeiValue = ethers.utils.hexlify(weiValue);
+    const unsignedTx = {
+      to: transactionAddress,
+      chainId: 11155111,
+      value: hexWeiValue,
+    };
+
+    const txUiConfig = {
+      header: "Send Transaction",
+      buttonText: "Send",
+    };
+
+    if (transactionAddress) {
+      await sendTransaction(unsignedTx, txUiConfig);
+    }
   };
 
-  const {data, isPending, isSuccess, sendTransaction} = useSendTransaction();
-
   return (
-    <Wrapper title="useSendTransaction">
-      <div className="rounded bg-red-400 px-2 py-1 text-sm text-white">
-        We recommend doing this on goerli.
-      </div>
-      <Button
-        cta="Send to privy.io.eth"
-        onClick_={() => sendTransaction(transactionRequest)}
-        disabled={!sendTransaction}
-      />
-      {isPending && <div>Check wallet</div>}
-      {isSuccess && <div>Transaction: {JSON.stringify(data)}</div>}
-    </Wrapper>
+    <button
+      onClick={sendTx}
+      disabled={!transactionAddress}
+      className='px-4 py-2 bg-sky-800 w-full text-white rounded-lg hover:bg-sky-900 mt-4'
+    >
+      Send
+    </button>
   );
-};
+}
 
 export default SendTransaction;

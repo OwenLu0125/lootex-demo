@@ -1,11 +1,13 @@
 'use client';
 import Link from 'next/link'
 import React from 'react'
-import { useWallets } from '@privy-io/react-auth';
+import { usePrivy, useWallets } from '@privy-io/react-auth';
+import SendTransaction from '../../components/SendTransaction';
 
 const Send = () => {
   const [amount, setAmount] = React.useState<number>(0);
   const [transactionAddress, setTransactionAddress] = React.useState('');
+  const { sendTransaction } = usePrivy();
   const { wallets } = useWallets();
   const embeddedWallet = wallets.find((wallet) => wallet.walletClientType === 'privy');
 
@@ -36,14 +38,15 @@ const Send = () => {
             {/* Other currency options */}
           </select>
         </div>
-        <Link href={{ pathname: 'send/confirm', query: { transactionAddress, amount } }}>
-          <div className='flex justify-center items-center'>
-            <button className="mt-60 px-2 py-2 w-full rounded-lg bg-blue-500 text-white"
+        {/* <Link href={{ pathname: 'send/confirm', query: { transactionAddress, amount } }}> */}
+        <div className='flex justify-center items-center'>
+          {/* <button className="mt-60 px-2 py-2 w-full rounded-lg bg-blue-500 text-white"
             >
               Continue
-            </button>
-          </div>
-        </Link>
+            </button> */}
+          <SendTransaction etherAmount={amount.toString()} transactionAddress={transactionAddress} sendTransaction={sendTransaction} />
+        </div>
+        {/* </Link> */}
       </div>
     </div>
   )
