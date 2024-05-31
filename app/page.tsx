@@ -7,7 +7,8 @@ import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import AutorenewIcon from '@mui/icons-material/Autorenew';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import { ethers } from 'ethers';
-import { useBalance } from 'wagmi';
+import { useBalance, useReadContract } from 'wagmi';
+import { abi } from '../lib/abi';
 
 export default function Home() {
   const { ready, authenticated, login, logout } = usePrivy();
@@ -17,8 +18,23 @@ export default function Home() {
   const [userWalletBalance, setUserWalletBalance] = useState<string>('');
   const [ethNumericValue, setEthNumericValue] = useState<number>(0);
   const [ethValue, setEthValue] = useState<number>(0);
+  const [wethValue, setWethValue] = useState<string>('');
 
   const { data } = useBalance({ address: userEmbeddedWallet as `0x${string}` });
+
+  const { data: weth } = useReadContract({
+    abi,
+    address: "0xfFf9976782d46CC05630D1f6eBAb18b2324d6B14",
+    functionName: "balanceOf",
+    args: [userEmbeddedWallet as `0x${string}`],
+  });
+
+  useEffect(() => {
+    if (weth) {
+      const etherValue = ethers.utils.formatEther(weth.toString());
+      setWethValue(etherValue)
+    }
+  }, [weth]);
 
   useEffect(() => {
     if (!ready) {
@@ -106,7 +122,7 @@ export default function Home() {
                   <div className='h-6 w-6 rounded-full mr-2 bg-gray-300'>🥴</div>
                   <span className='font-semibold text-sm text-'>WETH</span>
                 </div>
-                <p className='text-sm font-semibold'>0</p>
+                <p className='text-sm font-semibold'>{wethValue}</p>
               </div>
             </div>
             <button onClick={logout} className='bg-[#2F51AC] mt-5 p-4 rounded-2xl' >
@@ -115,7 +131,6 @@ export default function Home() {
           </div>
         ) : (
           <button onClick={login} className=' p-4 rounded-2xl'>Log In</button>
-
         )}
       </div>
     </>
