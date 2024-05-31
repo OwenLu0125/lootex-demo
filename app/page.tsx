@@ -122,7 +122,11 @@ export default function Home() {
                   <div className='h-6 w-6 rounded-full mr-2 bg-gray-300'>🥴</div>
                   <span className='font-semibold text-sm text-'>WETH</span>
                 </div>
-                <p className='text-sm font-semibold'>{wethValue} WETH</p>
+                <div className='flex flex-col'>
+                  <p className='text-sm font-semibold'>{wethValue} WETH</p>
+                  <p className='text-xs text-gray-500'>1 wETH = {ethNumericValue} USD </p>
+                </div>
+
               </div>
             </div>
             <button onClick={logout} className='bg-[#2F51AC] mt-5 p-4 rounded-2xl' >
