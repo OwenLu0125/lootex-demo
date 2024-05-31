@@ -17,9 +17,9 @@ const SwapComponent = () => {
   const [userEmbeddedWallet, setEmbeddedWallet] = useState<string>('');
   const [userWalletBalance, setUserWalletBalance] = useState<string>('');
   const [ethNumericValue, setEthNumericValue] = useState<number>(0);
-  const [ethValue, setEthValue] = useState<number>(0);
+  // const [ethValue, setEthValue] = useState<number>(0);
   const [userWethWalletBalance, setUserWethWalletBalance] = useState<string>('');
-  const [wethValue, setWethValue] = useState<number>();
+  // const [wethValue, setWethValue] = useState<number>();
   const [topCurrencyBalance, setTopCurrencyBalance] = useState<string>('');
   const [bottomCurrencyBalance, setBottomCurrencyBalance] = useState<string>('');
 
