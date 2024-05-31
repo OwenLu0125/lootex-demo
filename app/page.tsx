@@ -54,16 +54,16 @@ export default function Home() {
 
   return (
     <>
-      <div className=' min-h-screen  flex flex-col items-center justify-center'>
+      <div className="bg-gray-900 flex justify-center items-center min-h-screen">
         {ready && authenticated ? (
-          <div className='flex flex-col gap-4 bg-secondary rounded-2xl p-5 w'>
+          <div className="w-96 mx-auto mt-10 p-4 bg-[#1C1C1C] rounded-2xl flex flex-col gap-3 border">
             <p className='text-inherit' >Total balance:</p>
             <Typography variant='h2'>{ethValue.toFixed(3)} USD</Typography>
             <Typography className='bg-slate-500 rounded-lg text-center'>{userEmbeddedWallet.slice(0, 4) + '...' + userEmbeddedWallet.slice(-4)}</Typography>
             <div className='flex justify-between  mt-4'>
               <div className='flex flex-col items-center gap-1'>
                 <Link href='./send'>
-                  <button className='bg-btn100 hover:bg-sky-900   p-5 rounded-full '>
+                  <button className='bg-[#2F51AC] hover:bg-sky-900   p-5 rounded-full '>
                     <ArrowUpwardIcon />
                   </button>
                 </Link>
@@ -71,16 +71,18 @@ export default function Home() {
               </div>
               <div className='flex flex-col items-center gap-1'>
                 <Link href='./qrcode'>
-                  <button className='bg-blue-800 hover:bg-sky-900 text-white font-bold p-5 rounded-full '>
+                  <button className='bg-[#2F51AC] hover:bg-sky-900 text-white font-bold p-5 rounded-full '>
                     <ArrowDownwardIcon />
                   </button>
                 </Link>
                 <Typography>withdraw</Typography>
               </div>
               <div className='flex flex-col items-center gap-1'>
-                <button className='bg-sky-800 hover:bg-sky-900 text-white font-bold p-5 rounded-full '>
-                  <AutorenewIcon />
-                </button>
+                <Link href='./convert'>
+                  <button className='bg-sky-800 hover:bg-sky-900 text-white font-bold p-5 rounded-full '>
+                    <AutorenewIcon />
+                  </button>
+                </Link>
                 <Typography>convert</Typography>
               </div>
             </div>
@@ -107,7 +109,7 @@ export default function Home() {
                 <p className='text-sm font-semibold'>0</p>
               </div>
             </div>
-            <button onClick={logout} className='mt-5 p-4 rounded-2xl' >
+            <button onClick={logout} className='bg-[#2F51AC] mt-5 p-4 rounded-2xl' >
               Log Out
             </button>
           </div>
