@@ -58,7 +58,7 @@ export default function Home() {
         {ready && authenticated ? (
           <div className="w-96 mx-auto mt-10 p-4 bg-[#1C1C1C] rounded-2xl flex flex-col gap-3 border">
             <p className='text-inherit' >Total balance:</p>
-            <Typography variant='h2'>{ethValue.toFixed(3)} USD</Typography>
+            <Typography variant='h3'>{ethValue.toFixed(3)} USD</Typography>
             <Typography className='bg-slate-500 rounded-lg text-center'>{userEmbeddedWallet.slice(0, 4) + '...' + userEmbeddedWallet.slice(-4)}</Typography>
             <div className='flex justify-between  mt-4'>
               <div className='flex flex-col items-center gap-1'>
@@ -79,7 +79,7 @@ export default function Home() {
               </div>
               <div className='flex flex-col items-center gap-1'>
                 <Link href='./convert'>
-                  <button className='bg-sky-800 hover:bg-sky-900 text-white font-bold p-5 rounded-full '>
+                  <button className='bg-[#2F51AC] hover:bg-[#1e40af]text-white font-bold p-5 rounded-full '>
                     <AutorenewIcon />
                   </button>
                 </Link>

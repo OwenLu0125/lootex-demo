@@ -62,3 +62,12 @@ button {
 button:hover {
   background-color: #1e40af;
 }
+
+input {
+  background-color: transparent;
+  font-size: 20px; /* Add this line to change the font size */
+}
+
+input::placeholder {
+  font-size: 18px;
+}
