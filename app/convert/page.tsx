@@ -20,15 +20,23 @@ const SwapComponent = () => {
   const [ethValue, setEthValue] = useState<number>(0);
   const [userWethWalletBalance, setUserWethWalletBalance] = useState<string>('');
   const [wethValue, setWethValue] = useState<number>();
+  const [topCurrencyBalance, setTopCurrencyBalance] = useState<string>('');
+  const [bottomCurrencyBalance, setBottomCurrencyBalance] = useState<string>('');
+
 
   const { sendTransaction } = usePrivy();
   const { wallets } = useWallets();
 
   const handleSwap = () => {
-    const temp = topCurrency;
+    const tempCurrency = topCurrency;
     setTopCurrency(bottomCurrency);
-    setBottomCurrency(temp);
+    setBottomCurrency(tempCurrency);
+
+    const tempBalance = topCurrencyBalance;
+    setTopCurrencyBalance(bottomCurrencyBalance);
+    setBottomCurrencyBalance(tempBalance);
   };
+
 
   const { data: weth } = useReadContract({
     abi,
@@ -41,6 +49,7 @@ const SwapComponent = () => {
     if (weth) {
       const etherValue = ethers.utils.formatEther(weth.toString());
       setUserWethWalletBalance(etherValue)
+      setBottomCurrencyBalance(etherValue); // 初始化 bottomCurrencyBalance
     }
   }, [weth]);
 
@@ -64,6 +73,8 @@ const SwapComponent = () => {
         const ethStringAmount = ethers.utils.formatEther(walletBalance);
         setEmbeddedWallet(embeddedWallet.address);
         setUserWalletBalance(ethStringAmount);
+        setTopCurrencyBalance(ethStringAmount); // 初始化 topCurrencyBalance
+
       }
       const response = await fetch('https://dex-v3-api-aws.lootex.dev/api/v3/currency/all-pairs');
       const data = await response.json();
@@ -105,13 +116,14 @@ const SwapComponent = () => {
             </div>
             <div className="flex flex-col space-x-2">
               <div className="flex items-center bg-[#3C3C3C] px-2 py-1 rounded-lg">
-                <img src={`https://placehold.co/20x20`} alt={`${topCurrency} icon`} className="w-5 h-5" />
+                {/* <img src={`https://placehold.co/20x20`} alt={`${topCurrency} icon`} className="w-5 h-5" /> */}
                 <span className="ml-2">{topCurrency}</span>
                 <i className="fas fa-chevron-down ml-1"></i>
               </div>
-              <div className="text-xs text-gray-400 mt-1">餘額: {userWalletBalance.slice(0, 6)} <span className="text-blue-500"></span>
-                <div className="text-sm text-gray-400 mt-1">~{ethValue.toFixed(3)}USD</div>
+              <div className="text-xs text-gray-400 mt-1">餘額: {topCurrencyBalance.slice(0, 6)} <span className="text-blue-500"></span>
+                {/* <div className="text-sm text-gray-400 mt-1">~{ethValue.toFixed(3)}USD</div> */}
               </div>
+
             </div>
           </div>
           <div className="flex justify-center mx-auto  mt-5  " onClick={handleSwap}>
@@ -134,12 +146,12 @@ const SwapComponent = () => {
             </div>
             <div className="flex flex-col space-x-2">
               <div className="flex items-center bg-[#3C3C3C] px-2 py-1 rounded-lg">
-                <img src={`https://placehold.co/20x20`} alt={`${bottomCurrency} icon`} className="w-5 h-5" />
+                {/* <img src={`https://placehold.co/20x20`} alt={`${bottomCurrency} icon`} className="w-5 h-5" /> */}
                 <span className="ml-2">{bottomCurrency}</span>
                 <i className="fas fa-chevron-down ml-1"></i>
               </div>
-              <div className="text-xs text-gray-400 mt-1">餘額: {userWethWalletBalance} <span className="text-blue-500"></span></div>
-              <div className="text-sm text-gray-400 mt-1">~{wethValue?.toFixed(4)}USD</div>
+              <div className="text-xs text-gray-400 mt-1">餘額: {bottomCurrencyBalance.slice(0, 6)} <span className="text-blue-500"></span></div>
+              {/* <div className="text-sm text-gray-400 mt-1">~{wethValue?.toFixed(4)}USD</div> */}
 
             </div>
           </div>
