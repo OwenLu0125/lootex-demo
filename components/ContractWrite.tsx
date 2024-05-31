@@ -1,160 +1,203 @@
 'use client';
+import { encodeFunctionData } from 'viem';
+import { ethers } from "ethers";
 
-import Wrapper from 'components/Wrapper';
-import {shorten, type AddressString} from 'lib/utils';
-import {useAccount, useSimulateContract, useWriteContract} from 'wagmi';
-
-import Button from './Button';
-import MonoLabel from './MonoLabel';
 
 const wagmigotchiABI = [
-  {inputs: [], stateMutability: 'nonpayable', type: 'constructor'},
+  {
+    constant: true,
+    inputs: [],
+    name: 'name',
+    outputs: [{ name: '', internalType: 'string', type: 'string' }],
+    payable: false,
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    constant: false,
+    inputs: [
+      { name: 'guy', internalType: 'address', type: 'address' },
+      { name: 'wad', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'approve',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    payable: false,
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    constant: true,
+    inputs: [],
+    name: 'totalSupply',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    payable: false,
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    constant: false,
+    inputs: [
+      { name: 'src', internalType: 'address', type: 'address' },
+      { name: 'dst', internalType: 'address', type: 'address' },
+      { name: 'wad', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'transferFrom',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    payable: false,
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    constant: false,
+    inputs: [{ name: 'wad', internalType: 'uint256', type: 'uint256' }],
+    name: 'withdraw',
+    outputs: [],
+    payable: false,
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    constant: true,
+    inputs: [],
+    name: 'decimals',
+    outputs: [{ name: '', internalType: 'uint8', type: 'uint8' }],
+    payable: false,
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    constant: true,
+    inputs: [{ name: '', internalType: 'address', type: 'address' }],
+    name: 'balanceOf',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    payable: false,
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    constant: true,
+    inputs: [],
+    name: 'symbol',
+    outputs: [{ name: '', internalType: 'string', type: 'string' }],
+    payable: false,
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    constant: false,
+    inputs: [
+      { name: 'dst', internalType: 'address', type: 'address' },
+      { name: 'wad', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'transfer',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    payable: false,
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    constant: false,
+    inputs: [],
+    name: 'deposit',
+    outputs: [],
+    payable: true,
+    stateMutability: 'payable',
+    type: 'function',
+  },
+  {
+    constant: true,
+    inputs: [
+      { name: '', internalType: 'address', type: 'address' },
+      { name: '', internalType: 'address', type: 'address' },
+    ],
+    name: 'allowance',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    payable: false,
+    stateMutability: 'view',
+    type: 'function',
+  },
+  { payable: true, stateMutability: 'payable', type: 'fallback' },
   {
     anonymous: false,
     inputs: [
-      {
-        indexed: true,
-        internalType: 'address',
-        name: 'caretaker',
-        type: 'address',
-      },
-      {
-        indexed: true,
-        internalType: 'uint256',
-        name: 'amount',
-        type: 'uint256',
-      },
+      { indexed: true, name: 'src', internalType: 'address', type: 'address' },
+      { indexed: true, name: 'guy', internalType: 'address', type: 'address' },
+      { indexed: false, name: 'wad', internalType: 'uint256', type: 'uint256' },
     ],
-    name: 'CaretakerLoved',
+    name: 'Approval',
     type: 'event',
   },
   {
-    inputs: [],
-    name: 'clean',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
+    anonymous: false,
+    inputs: [
+      { indexed: true, name: 'src', internalType: 'address', type: 'address' },
+      { indexed: true, name: 'dst', internalType: 'address', type: 'address' },
+      { indexed: false, name: 'wad', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'Transfer',
+    type: 'event',
   },
   {
-    inputs: [],
-    name: 'feed',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
+    anonymous: false,
+    inputs: [
+      { indexed: true, name: 'dst', internalType: 'address', type: 'address' },
+      { indexed: false, name: 'wad', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'Deposit',
+    type: 'event',
   },
   {
-    inputs: [],
-    name: 'getAlive',
-    outputs: [{internalType: 'bool', name: '', type: 'bool'}],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [],
-    name: 'getBoredom',
-    outputs: [{internalType: 'uint256', name: '', type: 'uint256'}],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [],
-    name: 'getHunger',
-    outputs: [{internalType: 'uint256', name: '', type: 'uint256'}],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [],
-    name: 'getSleepiness',
-    outputs: [{internalType: 'uint256', name: '', type: 'uint256'}],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [],
-    name: 'getStatus',
-    outputs: [{internalType: 'string', name: '', type: 'string'}],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [],
-    name: 'getUncleanliness',
-    outputs: [{internalType: 'uint256', name: '', type: 'uint256'}],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [{internalType: 'address', name: '', type: 'address'}],
-    name: 'love',
-    outputs: [{internalType: 'uint256', name: '', type: 'uint256'}],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [],
-    name: 'play',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [],
-    name: 'sleep',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
+    anonymous: false,
+    inputs: [
+      { indexed: true, name: 'src', internalType: 'address', type: 'address' },
+      { indexed: false, name: 'wad', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'Withdrawal',
+    type: 'event',
   },
 ];
 
-const ContractWrite = () => {
-  const {chain} = useAccount();
+type Props = {
+  sendTransaction: any;
+  etherAmount: string;
+};
 
-  const contractAddress: AddressString | undefined = '0xeCB504D39723b0be0e3a9Aa33D646642D1051EE1'; // WAGMIGOTCHI on Mainnet and Goerli
 
-  const {data: simulatedContract} = useSimulateContract({
-    address: contractAddress,
-    abi: wagmigotchiABI,
-    functionName: 'feed',
-  });
+const ContractWrite = ({ sendTransaction, etherAmount }: Props) => {
 
-  const {data, isPending, isError, writeContract} = useWriteContract();
+  const sendTx = async () => {
+    const weiValue = ethers.utils.parseEther(etherAmount);
+    const hexWeiValue = ethers.utils.hexlify(weiValue);
 
-  if (!chain) {
-    return (
-      <Wrapper title="useContractWrite">
-        <p>Loading...</p>
-      </Wrapper>
-    );
-  }
+    const data = encodeFunctionData({
+      abi: wagmigotchiABI,
+      functionName: 'deposit'
+    })
+    const transactionRequest = {
+      to: '0xfFf9976782d46CC05630D1f6eBAb18b2324d6B14',
+      data: data,
+      value: hexWeiValue, // Only necessary for payable methods
+    };
 
-  if (!contractAddress) {
-    return (
-      <Wrapper title="useContractWrite">
-        <p>Unsupported network. Please switch to Goerli or Mainnet.</p>
-      </Wrapper>
-    );
+    const txUiConfig = {
+      header: "Send Transaction",
+      buttonText: "Send",
+    };
+
+    if (etherAmount) {
+      await sendTransaction(transactionRequest, txUiConfig);
+    }
+
   }
 
   return (
-    <Wrapper title="useContractWrite">
-      <div className="rounded bg-red-400 px-2 py-1 text-sm text-white">
-        We recommend doing this on goerli.
-      </div>
-      {data && !isError && (
-        <p>
-          Transaction hash: <MonoLabel label={shorten(data)} />
-        </p>
-      )}
-      {isError && <p>Error sending transaction.</p>}
-      {simulatedContract && (
-        <Button
-          disabled={isPending}
-          onClick_={() => writeContract?.(simulatedContract.request)}
-          cta="Feed Wagmigotchi"
-        />
-      )}
-    </Wrapper>
+    <button
+      onClick={sendTx}
+      disabled={!etherAmount}
+      className='px-4 py-2 bg-sky-800 w-full text-white rounded-lg hover:bg-sky-900 mt-4'
+    >
+      Send123
+    </button>
   );
 };
 

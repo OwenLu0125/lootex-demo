@@ -3,6 +3,7 @@ import Link from 'next/link'
 import React from 'react'
 import { usePrivy, useWallets } from '@privy-io/react-auth';
 import SendTransaction from '../../components/SendTransaction';
+import ContractWrite from '../../components/ContractWrite';
 
 const Send = () => {
   const [amount, setAmount] = React.useState<number>(0);
@@ -45,6 +46,7 @@ const Send = () => {
               Continue
             </button> */}
           <SendTransaction etherAmount={amount.toString()} transactionAddress={transactionAddress} sendTransaction={sendTransaction} />
+          <ContractWrite sendTransaction={sendTransaction} etherAmount={amount.toString()} />
         </div>
         {/* </Link> */}
       </div>
