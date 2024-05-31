@@ -3,7 +3,7 @@ import { encodeFunctionData } from 'viem';
 import { ethers } from "ethers";
 
 
-const wagmigotchiABI = [
+export const wagmigotchiABI = [
   {
     constant: true,
     inputs: [],
@@ -166,7 +166,7 @@ type Props = {
 const ContractWrite = ({ sendTransaction, etherAmount }: Props) => {
 
   const sendTx = async () => {
-    const weiValue = ethers.utils.parseEther(etherAmount);
+    const weiValue = ethers.utils.parseEther(etherAmount.toString());
     const hexWeiValue = ethers.utils.hexlify(weiValue);
 
     const data = encodeFunctionData({
@@ -191,12 +191,11 @@ const ContractWrite = ({ sendTransaction, etherAmount }: Props) => {
   }
 
   return (
-    <button
+    <button className="w-full py-4 bg-[#2F51AC] rounded-lg"
       onClick={sendTx}
       disabled={!etherAmount}
-      className='px-4 py-2 bg-sky-800 w-full text-white rounded-lg hover:bg-sky-900 mt-4'
     >
-      Send123
+      交換
     </button>
   );
 };
