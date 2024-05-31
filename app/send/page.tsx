@@ -12,7 +12,7 @@ const Send = () => {
   const embeddedWallet = wallets.find((wallet) => wallet.walletClientType === 'privy');
 
   return (
-    <div className="bg-gray-900 flex justify-center items-center min-h-screen">
+    <div className="bg-gray-900 p-4 flex justify-center items-center min-h-screen">
       <div className=" mx-auto mt-10 p-4 bg-[#1C1C1C] rounded-2xl flex flex-col gap-3 border">
         <div className="flex space-x-4">
           <Link href="/">
@@ -24,7 +24,7 @@ const Send = () => {
         <div className="flex flex-col flex-grow p-4">
           <h2 className="mb-4 text-lg">Send</h2>
           <div>from</div>
-          <div className='mb-4'>{embeddedWallet?.address}</div>
+          <div className='mb-4 break-all'>{embeddedWallet?.address}</div>
           <div>to</div>
           <input className="border p-2 mb-4 rounded-lg" type="text" placeholder="Enter name or link"
             value={transactionAddress}

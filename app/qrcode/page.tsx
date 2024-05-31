@@ -17,7 +17,7 @@ const Qrcode = () => {
 
   return (
     <>
-      <div className="bg-gray-900 flex  items-center min-h-screen">
+      <div className="bg-gray-900 flex  items-center p-4  min-h-screen">
         <div className="w-96 mx-auto mt-10 p-4 bg-[#1C1C1C] rounded-2xl flex flex-col items-center gap-3 border ">
           {/* Close button */}
           <div className="flex self-start">

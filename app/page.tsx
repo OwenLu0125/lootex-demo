@@ -70,7 +70,7 @@ export default function Home() {
 
   return (
     <>
-      <div className="bg-gray-900 flex justify-center items-center min-h-screen">
+      <div className="bg-gray-900 flex justify-center items-center p-4  min-h-screen">
         {ready && authenticated ? (
           <div className="w-96 mx-auto mt-10 p-4 bg-[#1C1C1C] rounded-2xl flex flex-col gap-3 border">
             <p className='text-inherit' >Total balance:</p>

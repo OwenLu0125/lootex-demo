@@ -56,8 +56,8 @@ const SwapComponent = () => {
   }, [ethNumericValue, userWalletBalance, wallets]);
 
   return (
-    <div className="bg-gray-900 flex justify-center items-center min-h-screen">
-      <div className="w-96 mx-auto mt-10 p-4 bg-[#1C1C1C] rounded-2xl">
+    <div className="bg-gray-900 flex justify-center items-center p-4 min-h-screen">
+      <div className="w-96 mx-auto mt-10 p-4 border bg-[#1C1C1C] rounded-2xl">
         <div className="flex justify-between items-center">
           <div className="flex space-x-4">
             <Link href="/">
@@ -66,7 +66,7 @@ const SwapComponent = () => {
               </svg>
             </Link>
           </div>
-          <div className="border-b-2 border-pink-500 pb-1">交換</div>
+          <div className="border-b-2 border-b-[#FF0088] pb-1">交換</div>
           <div className="flex space-x-4 text-gray-400">
             <i className="fas fa-signal"></i>
             <i className="fas fa-sliders-h"></i>
@@ -83,7 +83,7 @@ const SwapComponent = () => {
                 value={amount || ''}
                 onChange={(e) => setAmount(Number(e.target.value))}
               />
-              <div className="text-sm text-gray-400">~{ethValue.toFixed(3)}USD</div>
+              <div className="text-sm text-gray-400 mt-1">~{ethValue.toFixed(3)}USD</div>
             </div>
             <div className="flex flex-col items-center space-x-2">
               <div className="flex items-center bg-[#3C3C3C] px-2 py-1 rounded-lg">
@@ -91,7 +91,7 @@ const SwapComponent = () => {
                 <span className="ml-2">{topCurrency}</span>
                 <i className="fas fa-chevron-down ml-1"></i>
               </div>
-              <div className="text-xs text-gray-400">餘額: {userWalletBalance.slice(0, 6)} <span className="text-blue-500"></span>
+              <div className="text-xs text-gray-400 mt-1">餘額: {userWalletBalance.slice(0, 6)} <span className="text-blue-500"></span>
               </div>
             </div>
           </div>
@@ -112,15 +112,16 @@ const SwapComponent = () => {
                 value={amount || ''}
                 onChange={(e) => setAmount(Number(e.target.value))}
               />
-              <div className="text-sm text-gray-400">~$3,736.58</div>
+              <div className="text-sm text-gray-400 mt-1">~$3,736.58</div>
             </div>
             <div className="flex flex-col items-center space-x-2">
               <div className="flex items-center bg-[#3C3C3C] px-2 py-1 rounded-lg">
                 <img src={`https://placehold.co/20x20`} alt={`${bottomCurrency} icon`} className="w-5 h-5" />
+                
                 <span className="ml-2">{bottomCurrency}</span>
                 <i className="fas fa-chevron-down ml-1"></i>
               </div>
-              <div className="text-xs text-gray-400">餘額: <span className="text-blue-500"></span></div>
+              <div className="text-xs text-gray-400 mt-1">餘額: <span className="text-blue-500"></span></div>
             </div>
           </div>
 
