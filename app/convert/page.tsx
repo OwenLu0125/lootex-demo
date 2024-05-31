@@ -5,16 +5,21 @@ import ContractWrite from 'components/ContractWrite';
 import { usePrivy, useWallets } from '@privy-io/react-auth';
 import { ethers } from 'ethers';
 import { useEffect, useState } from 'react';
+import { abi } from '../../lib/abi';
+import { useReadContract } from 'wagmi';
+
 
 
 const SwapComponent = () => {
   const [amount, setAmount] = useState<number>();
   const [topCurrency, setTopCurrency] = useState<string>('ETH');
   const [bottomCurrency, setBottomCurrency] = useState<string>('WETH');
-  // const [userEmbeddedWallet, setEmbeddedWallet] = useState<string>('');
+  const [userEmbeddedWallet, setEmbeddedWallet] = useState<string>('');
   const [userWalletBalance, setUserWalletBalance] = useState<string>('');
   const [ethNumericValue, setEthNumericValue] = useState<number>(0);
   const [ethValue, setEthValue] = useState<number>(0);
+  const [userWethWalletBalance, setUserWethWalletBalance] = useState<string>('');
+  const [wethValue, setWethValue] = useState<number>();
 
   const { sendTransaction } = usePrivy();
   const { wallets } = useWallets();
@@ -24,6 +29,20 @@ const SwapComponent = () => {
     setTopCurrency(bottomCurrency);
     setBottomCurrency(temp);
   };
+
+  const { data: weth } = useReadContract({
+    abi,
+    address: "0xfFf9976782d46CC05630D1f6eBAb18b2324d6B14",
+    functionName: "balanceOf",
+    args: [userEmbeddedWallet as `0x${string}`],
+  });
+
+  useEffect(() => {
+    if (weth) {
+      const etherValue = ethers.utils.formatEther(weth.toString());
+      setUserWethWalletBalance(etherValue)
+    }
+  }, [weth]);
 
   useEffect(() => {
     setUp();
@@ -43,7 +62,7 @@ const SwapComponent = () => {
           embeddedWallet.address
         );
         const ethStringAmount = ethers.utils.formatEther(walletBalance);
-        // setEmbeddedWallet(embeddedWallet.address);
+        setEmbeddedWallet(embeddedWallet.address);
         setUserWalletBalance(ethStringAmount);
       }
       const response = await fetch('https://dex-v3-api-aws.lootex.dev/api/v3/currency/all-pairs');
@@ -51,12 +70,12 @@ const SwapComponent = () => {
       setEthNumericValue(parseFloat(data.ETH))
       const walletNumericBalance = parseFloat(userWalletBalance);
       setEthValue(ethNumericValue * walletNumericBalance);
-
+      setWethValue(ethNumericValue * Number(userWethWalletBalance))
     }
   }, [ethNumericValue, userWalletBalance, wallets]);
 
   return (
-    <div className="bg-gray-900 flex justify-center items-center p-4 min-h-screen">
+    <div className="bg-gray-900 flex justify-center items-center p-5 min-h-screen">
       <div className="w-96 mx-auto mt-10 p-4 border bg-[#1C1C1C] rounded-2xl">
         <div className="flex justify-between items-center">
           <div className="flex space-x-4">
@@ -83,15 +102,15 @@ const SwapComponent = () => {
                 value={amount || ''}
                 onChange={(e) => setAmount(Number(e.target.value))}
               />
-              <div className="text-sm text-gray-400 mt-1">~{ethValue.toFixed(3)}USD</div>
             </div>
-            <div className="flex flex-col items-center space-x-2">
+            <div className="flex flex-col space-x-2">
               <div className="flex items-center bg-[#3C3C3C] px-2 py-1 rounded-lg">
                 <img src={`https://placehold.co/20x20`} alt={`${topCurrency} icon`} className="w-5 h-5" />
                 <span className="ml-2">{topCurrency}</span>
                 <i className="fas fa-chevron-down ml-1"></i>
               </div>
               <div className="text-xs text-gray-400 mt-1">餘額: {userWalletBalance.slice(0, 6)} <span className="text-blue-500"></span>
+                <div className="text-sm text-gray-400 mt-1">~{ethValue.toFixed(3)}USD</div>
               </div>
             </div>
           </div>
@@ -112,16 +131,16 @@ const SwapComponent = () => {
                 value={amount || ''}
                 onChange={(e) => setAmount(Number(e.target.value))}
               />
-              <div className="text-sm text-gray-400 mt-1">~$3,736.58</div>
             </div>
-            <div className="flex flex-col items-center space-x-2">
+            <div className="flex flex-col space-x-2">
               <div className="flex items-center bg-[#3C3C3C] px-2 py-1 rounded-lg">
                 <img src={`https://placehold.co/20x20`} alt={`${bottomCurrency} icon`} className="w-5 h-5" />
-                
                 <span className="ml-2">{bottomCurrency}</span>
                 <i className="fas fa-chevron-down ml-1"></i>
               </div>
-              <div className="text-xs text-gray-400 mt-1">餘額: <span className="text-blue-500"></span></div>
+              <div className="text-xs text-gray-400 mt-1">餘額: {userWethWalletBalance} <span className="text-blue-500"></span></div>
+              <div className="text-sm text-gray-400 mt-1">~{wethValue?.toFixed(4)}USD</div>
+
             </div>
           </div>
 

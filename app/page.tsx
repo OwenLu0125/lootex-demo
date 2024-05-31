@@ -122,7 +122,7 @@ export default function Home() {
                   <div className='h-6 w-6 rounded-full mr-2 bg-gray-300'>🥴</div>
                   <span className='font-semibold text-sm text-'>WETH</span>
                 </div>
-                <p className='text-sm font-semibold'>{wethValue}</p>
+                <p className='text-sm font-semibold'>{wethValue} WETH</p>
               </div>
             </div>
             <button onClick={logout} className='bg-[#2F51AC] mt-5 p-4 rounded-2xl' >
