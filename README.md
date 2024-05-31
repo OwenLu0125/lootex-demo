@@ -10,7 +10,7 @@ To try the demo, go to https://wagmi-app.vercel.app/ and login with Privy. As pa
 
 1. Fork this repository, clone it, and open it in your terminal.
 ```sh
-git clone https://github.com/<your-github-handle>/wagmi-demo
+https://github.com/OwenLu0125/lootex-demo.git
 ```
 
 2. Install the necessary dependencies with `npm`.
